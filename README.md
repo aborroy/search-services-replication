@@ -14,10 +14,10 @@ You should review volumes, configuration, modules & tuning parameters before usi
 
 ## Source Images
 
-* [alfresco-content-repository-community:6.1.2-ga](https://hub.docker.com/r/alfresco/alfresco-content-repository-community)
-* [alfresco-share:6.1.0](https://hub.docker.com/r/alfresco/alfresco-share)
-* [alfresco-search-services:1.3.0.1](https://hub.docker.com/r/alfresco/alfresco-search-services)
-* [postgres:10.1](https://hub.docker.com/_/postgres)
+* [alfresco-content-repository-community:6.2.0-ga](https://hub.docker.com/r/alfresco/alfresco-content-repository-community)
+* [alfresco-share:6.2.0](https://hub.docker.com/r/alfresco/alfresco-share)
+* [alfresco-search-services:2.0.0.1](https://hub.docker.com/r/alfresco/alfresco-search-services)
+* [postgres:11.4](https://hub.docker.com/_/postgres)
 * [nginx:stable-alpine](https://hub.docker.com/_/nginx)
 
 ## Project structure
@@ -65,12 +65,12 @@ Start docker and check the ports are correctly bound.
 ```bash
 $ docker-compose up -d
 $ docker ps --format '{{.Names}}\t{{.Image}}\t{{.Ports}}'
-alfresco_1	  alfresco/alfresco-content-repository-community:6.1.2-ga	8080/tcp
-share_1	      alfresco/alfresco-share:6.1.0	                          8000/tcp, 8080/tcp
-solr6slave_1	solr6slave	                                            8983/tcp
-solr6master_1	solr6master	                                            8983/tcp
-proxy_1	      nginx:stable-alpine	                                    0.0.0.0:80->80/tcp
-postgres_1	  postgres:10.1	                                          0.0.0.0:5432->5432/tcp
+alfresco_1    alfresco/alfresco-content-repository-community:6.2.0-ga 8080/tcp
+share_1       alfresco/alfresco-share:6.2.0                           8000/tcp, 8080/tcp
+solr6slave_1  solr6slave                                              8983/tcp
+solr6master_1 solr6master                                             8983/tcp
+proxy_1       nginx:stable-alpine                                     0.0.0.0:80->80/tcp
+postgres_1    postgres:11.4                                           0.0.0.0:5432->5432/tcp
 ```
 
 ### Viewing System Logs
