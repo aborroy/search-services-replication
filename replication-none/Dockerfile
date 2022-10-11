@@ -23,20 +23,20 @@ ENV MASTER_HOST $MASTER_HOST
 # must be applied to configuration files on each node (instead on the template itself)
 
 # Configure SOLR cores to run in HTTP mode
-RUN sed -i '/^bash.*/i sed -i "'"s/alfresco.secureComms=https/alfresco.secureComms=none/g"'" ${DIST_DIR}/solrhome/templates/rerank/conf/solrcore.properties\n' \
-    ${DIST_DIR}/solr/bin/search_config_setup.sh && \
-# Configure Alfresco Service Name
-    sed -i '/^bash.*/i sed -i "'"s/alfresco.host=localhost/alfresco.host=alfresco/g"'" ${DIST_DIR}/solrhome/templates/rerank/conf/solrcore.properties\n' \
+RUN sed -i '/^bash.*/i sed -i "'"s/alfresco.secureComms=https/alfresco.secureComms=none/g"'" ${DIST_DIR}/solrhome/templates/{noR,r}erank/conf/solrcore.properties\n' \
     ${DIST_DIR}/solr/bin/search_config_setup.sh && \
 # Set Hostname for this Node
     sed -i '/^bash.*/i sed -i "'"s/solr.host=localhost/solr.host=${SOLR_HOSTNAME}/g"'" ${DIST_DIR}/solrhome/conf/shared.properties\n' \
     ${DIST_DIR}/solr/bin/search_config_setup.sh && \
 # Set Master / Slave configuration for this Node
-    sed -i '/^bash.*/i echo "\nenable.master=${ENABLE_MASTER}\nenable.slave=${ENABLE_SLAVE}" >> ${DIST_DIR}/solrhome/templates/rerank/conf/solrcore.properties\n' \
+    sed -i '/^bash.*/i echo "\nenable.master=${ENABLE_MASTER}\nenable.slave=${ENABLE_SLAVE}" >> ${DIST_DIR}/solrhome/templates/rerank/conf/solrcore.properties\necho "enable.master=${ENABLE_MASTER}\nenable.slave=${ENABLE_SLAVE}" >> ${DIST_DIR}/solrhome/templates/noRerank/conf/solrcore.properties\n' \
     ${DIST_DIR}/solr/bin/search_config_setup.sh
 
 # Apply configuration for Master SOLR Node
 RUN if [ "$ENABLE_MASTER" = "true" ] ; then \
+# Configure Alfresco Service Name
+sed -i '/^bash.*/i sed -i "'"s/alfresco.host=localhost/alfresco.host=alfresco/g"'" ${DIST_DIR}/solrhome/templates/{noR,r}erank/conf/solrcore.properties\n' \
+    ${DIST_DIR}/solr/bin/search_config_setup.sh; \
 sed -i "/^bash.*/i sed -i '/^\\\\\s*<requestHandler name=\"\\\\/replication\".*/a \
     <lst name=\"master\">\
       <str name=\"replicateAfter\">commit</str>\
@@ -50,4 +50,6 @@ sed -i "/^bash.*/i sed -i '/^\\\\\s*<requestHandler name=\"\\\\/replication\".*/
       <str name=\"masterUrl\">http://${MASTER_HOST}:8983/solr/alfresco</str>\
       <str name=\"pollInterval\">00:00:60</str>\
     </lst>' ${DIST_DIR}/solrhome/templates/rerank/conf/solrconfig.xml\n" ${DIST_DIR}/solr/bin/search_config_setup.sh; \
+sed -i '/^bash.*/i sed -i "'"s/alfresco.tracking=true/alfresco.tracking=false/g"'" ${DIST_DIR}/solrhome/templates/{noR,r}erank/conf/solrcore.properties\n' \
+    ${DIST_DIR}/solr/bin/search_config_setup.sh; \
 fi
